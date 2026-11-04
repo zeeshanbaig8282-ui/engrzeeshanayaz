@@ -124,7 +124,7 @@
   .fm-note { margin: .8rem 0 0; color: var(--muted); font-size: .66rem; }
 
   /* Stats strip */
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
   .stats div { padding: 1.4rem 1rem; border-left: 1px solid var(--line); }
   .stats div:first-child { border-left: 0; padding-left: 0; }
   .stats strong { display: block; font: 700 clamp(1.9rem, 4vw, 2.7rem)/1 var(--font-display); letter-spacing: -.02em; color: var(--accent); }
@@ -383,9 +383,8 @@
       </div>
     </section>
 
-    <section class="stats" aria-label="At a glance">
+    <section class="stats" aria-label="At a glance" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
       <div><strong><span class="num" data-to="3.42" data-dec="2">3.42</span><sub> /4.00</sub></strong><span>CGPA, BSc Agricultural Engineering</span></div>
-      <div><strong><span class="num" data-to="1010" data-dec="0">1010</span><sub> /1100</sub></strong><span>FSc Pre-Engineering marks</span></div>
       <div><strong><span class="num" data-to="2" data-dec="0">2</span></strong><span>Roles: PCRWR internship and SET UAF</span></div>
       <div><strong><span class="num" data-to="3" data-dec="0">3</span></strong><span>Languages: English, Urdu, Chinese</span></div>
     </section>
@@ -642,7 +641,7 @@
         <article class="entry">
           <p class="when mono">2026</p>
           <div>
-            <h3>BSc Agricultural Engineering (FYDP-601 &amp; 602)</h3>
+            <h3>BSc. Agricultural Engineering </h3>
             <p class="meta mono">University of Agriculture, Faisalabad (UAF)</p>
             <p class="grade mono">CGPA 3.42 / 4.00</p>
           </div>
@@ -652,7 +651,6 @@
           <div>
             <h3>FSc Pre-Engineering</h3>
             <p class="meta mono">Punjab Group of Colleges, Faisalabad</p>
-            <p class="grade mono">Marks obtained 1010 / 1100</p>
           </div>
         </article>
         <article class="entry">
@@ -856,9 +854,3 @@
 </script>
 </body>
 </html>
-"""
-
-with open("portfolio.html", "w", encoding="utf-8") as f:
-    f.write(html_code)
-
-print("Updated portfolio.html successfully!")
