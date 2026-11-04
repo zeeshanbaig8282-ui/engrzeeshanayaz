@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Engineer Zeeshan Ayaz | Agricultural Engineer &amp; Precision Ag Specialist</title>
+<meta name="description" content="Zeeshan Ayaz, agricultural engineer (PEC registered) working on precision agriculture, UAV computer vision, irrigation design, and water-control automation.">
+<meta name="theme-color" content="#0a130e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Theme: crop-green ground, water-cyan and soil-tan accents. Hero carries a simulated precision-agriculture field map. */
+  :root {
+    --bg: #0a130e;
+    --surface: #101c15;
+    --surface-2: #16261c;
+    --ink: #e9f2e6;
+    --muted: #98ae9f;
+    --line: #223829;
+    --accent: #8fd14f;
+    --accent-ink: #0b1a06;
+    --water: #4fc3e8;
+    --soil: #b98a55;
+    --ok: #46d39a;
+    --rose: #e0897c;
+    --rose-bg: #2a1d1f;
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-padding-top: 4.5rem; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--font-body); transition: background .4s, color .4s; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  a { color: inherit; }
+  img { max-width: 100%; height: auto; display: block; border-radius: 6px; }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .wrap {
+    max-width: 72rem; margin-inline: auto; padding-block: 0 2.5rem;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .mono { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Scroll progress: a stem that grows as you read */
+  #progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 50; transform-origin: 0 50%; transform: scaleX(0);
+    background: linear-gradient(90deg, var(--soil), var(--accent), var(--water)); }
+
+  /* Top bar */
+  .bar {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem 1.5rem;
+    padding-block: 0.9rem; border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  .bar .brand { color: var(--muted); display: inline-flex; align-items: center; gap: .55rem; }
+  .bar .brand svg { width: 1.1rem; height: 1.1rem; color: var(--accent); }
+  .bar nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1.25rem; }
+  .bar nav a { text-decoration: none; padding-block: 0.25rem; border-bottom: 1px solid transparent; transition: border-color .2s, color .2s; }
+  .bar nav a:hover, .bar nav a[aria-current="true"] { border-bottom-color: var(--accent); color: var(--accent); }
+
+  /* Buttons */
+  .btn { display: inline-block; padding: 0.7rem 1.15rem; border: 1px solid var(--accent); border-radius: 4px; font: 500 0.95rem/1.2 var(--font-body); text-decoration: none; cursor: pointer; transition: transform .2s, box-shadow .2s, filter .2s, border-color .2s; }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 8px 22px -8px var(--accent); }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  /* Hero */
+  .hero { position: relative; isolation: isolate; padding-block: 3rem 3.5rem; }
+  .contours { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  .contours path { fill: none; stroke: var(--water); stroke-width: 1; opacity: .22; vector-effect: non-scaling-stroke; stroke-dasharray: 3 9; }
+  .contours path:nth-child(even) { stroke: var(--accent); opacity: .18; }
+  .rows-bg { position: absolute; left: 0; right: 0; bottom: 0; height: 45%; z-index: -1; pointer-events: none;
+    background: repeating-linear-gradient(98deg, transparent 0 26px, color-mix(in srgb, var(--accent) 14%, transparent) 26px 28px);
+    -webkit-mask-image: linear-gradient(to top, #000, transparent); mask-image: linear-gradient(to top, #000, transparent); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 3rem; align-items: center; }
+
+  .badge { display: inline-flex; align-items: center; gap: 0.6rem; margin: 0 0 1.75rem; padding: 0.35rem 0.8rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+  .badge .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); }
+  .hero h1 { margin: 0; font: 700 clamp(3.1rem, 9vw, 6.4rem)/0.92 var(--font-display); letter-spacing: -0.03em; font-variation-settings: "opsz" 96; }
+  .hero h1 span { display: block; }
+  .hero h1 .title-pre { margin-bottom: 0.6rem; color: var(--muted); font: 500 clamp(1.1rem, 3vw, 1.6rem)/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+  .hero h1 .surname { background: linear-gradient(95deg, var(--accent), var(--water)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tagline { margin: 1.4rem 0 0; max-width: 32ch; padding-left: .9rem; border-left: 3px solid var(--accent); color: var(--accent); font: 500 clamp(1.05rem, 2.4vw, 1.3rem)/1.4 var(--font-display); letter-spacing: -.005em; }
+  .slogan { margin: .75rem 0 0; color: var(--water); font: italic 500 1.2rem/1.35 var(--font-display); }
+  .lede { margin: 1.5rem 0 0; max-width: 34ch; font-size: 1.3rem; line-height: 1.45; }
+  .status { margin: 1.25rem 0 0; color: var(--muted); }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+
+  .contacts { margin-top: 1.25rem; max-width: 34rem; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); display: none; }
+  .contacts.show { display: block !important; }
+  .rows { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.8rem 1rem; align-items: center; margin: 0; }
+  .rows dt { color: var(--muted); }
+  .rows dd { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; min-width: 0; }
+  .rows code { font: 500 0.95rem/1.4 var(--font-mono); overflow-wrap: anywhere; }
+  .copy { padding: 0.3rem 0.7rem; border: 1px solid var(--line); border-radius: 3px; background: transparent; color: var(--ink); font: 400 0.78rem/1.3 var(--font-mono); cursor: pointer; }
+  .copy:hover { border-color: var(--accent); }
+  .copy-status { color: var(--muted); }
+
+  /* Simulated field map */
+  .fm { padding: 1rem 1.1rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 30px 60px -40px #000; }
+  .fm-head { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); }
+  .fm-head b { color: var(--accent); font-weight: 500; }
+  .fm-grid { position: relative; overflow: hidden; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; margin: 0.9rem 0; border-radius: 4px; }
+  .fm-grid i { aspect-ratio: 1; border-radius: 2px; background: color-mix(in oklab, var(--water) calc(var(--m, 50) * 1%), var(--soil)); transition: background .9s ease; }
+  .fm-grid::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 12%; pointer-events: none; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 45%, transparent)); border-right: 1px solid var(--accent); }
+  .fm-legend { display: flex; align-items: center; gap: .6rem; color: var(--muted); font-size: .68rem; }
+  .fm-legend span.bar2 { flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--soil), var(--water)); }
+  .fm-read { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin-top: 1rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+  .fm-read small { display: block; color: var(--muted); }
+  .fm-read strong { font: 650 1.45rem/1.2 var(--font-display); letter-spacing: -.01em; }
+  .fm-read .valve { display: inline-flex; align-items: center; gap: .45rem; }
+  .fm-read .valve::before { content: ""; width: .6rem; height: .6rem; border-radius: 50%; background: var(--muted); transition: background .4s, box-shadow .4s; }
+  .fm.open .valve { color: var(--water); }
+  .fm.open .valve::before { background: var(--water); box-shadow: 0 0 10px var(--water); }
+  .fm-note { margin: .8rem 0 0; color: var(--muted); font-size: .66rem; }
+
+  /* Stats strip */
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+  .stats div { padding: 1.4rem 1rem; border-left: 1px solid var(--line); }
+  .stats div:first-child { border-left: 0; padding-left: 0; }
+  .stats strong { display: block; font: 700 clamp(1.9rem, 4vw, 2.7rem)/1 var(--font-display); letter-spacing: -.02em; color: var(--accent); }
+  .stats strong sub { font: 400 .9rem var(--font-mono); color: var(--muted); letter-spacing: 0; }
+  .stats span { display: block; margin-top: .45rem; color: var(--muted); }
+
+  /* Bands */
+  .band { padding-block: 3.5rem; border-top: 1px solid var(--line); }
+  .stats + .band { border-top: 0; }
+  .sec-head { margin: 0 0 2rem; }
+  .sec-head .mono { margin: 0 0 0.5rem; color: var(--accent); display: flex; align-items: center; gap: .6rem; }
+  .sec-head .mono::before { content: ""; width: 1.6rem; height: 2px; background: var(--accent); transform-origin: 0 50%; }
+  .sec-head h2 { margin: 0; max-width: 22ch; font: 650 clamp(1.8rem, 4vw, 2.6rem)/1.1 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; }
+  h3 { margin: 0; font: 650 1.5rem/1.2 var(--font-display); letter-spacing: -0.01em; text-wrap: balance; }
+  .meta { margin: 0.45rem 0 0; color: var(--muted); }
+  p { margin: 0 0 1rem; max-width: 62ch; }
+  ul.plain { margin: 1rem 0 0; padding-left: 1.15rem; max-width: 62ch; }
+  ul.plain li { margin-bottom: 0.5rem; padding-left: 0.2rem; }
+  ul.plain li::marker { color: var(--accent); }
+
+  /* Services */
+  .services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .services li { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.6rem; padding: 1.35rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); transition: transform .3s, border-color .3s, box-shadow .3s; }
+  .services li::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--water)); transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s ease; }
+  .services li:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); box-shadow: 0 18px 36px -22px var(--accent); }
+  .services li:hover::before { transform: scaleX(1); }
+  .services .tools { margin: 0; color: var(--accent); }
+  .services h3 { font-size: 1.2rem; }
+  .services p { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.55; }
+
+  /* Case studies */
+  .case { padding: 1.75rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  .case + .case { margin-top: 1.5rem; }
+  .pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.9rem; padding: 0; list-style: none; }
+  .pill { padding: 0.2rem 0.65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font: 400 0.7rem/1.4 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .pill.live { color: var(--ok); border-color: var(--ok); }
+  .flow { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; }
+  .flow li { position: relative; padding: 0.9rem 1rem 1rem; border: 1px solid var(--line); border-top: 3px solid var(--line); border-radius: 4px; background: var(--bg); }
+  .flow li b { display: block; margin-bottom: 0.35rem; color: var(--accent); font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  .flow li span { display: block; font-size: 0.92rem; line-height: 1.45; }
+  .flow li:not(:last-child)::after { content: "\2192"; position: absolute; right: -1.25rem; top: 50%; transform: translateY(-50%); width: 1rem; text-align: center; color: var(--accent); font-size: 1.1rem; }
+  .loop { position: relative; margin: 0.5rem 0 0; border: 1.5px dashed var(--accent); border-top: none; border-radius: 0 0 8px 8px; height: 1.1rem; }
+  .loop::after { content: ""; position: absolute; bottom: -5px; right: 10%; width: 9px; height: 9px; border-radius: 50%; background: var(--water); box-shadow: 0 0 10px var(--water); }
+  .loop-label { margin: 0.7rem 0 0; color: var(--muted); font-size: 0.88rem; max-width: none; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+  .tags li { padding: 0.25rem 0.6rem; border: 1px solid var(--line); border-radius: 3px; color: var(--muted); font: 400 0.75rem/1.3 var(--font-mono); transition: color .2s, border-color .2s; }
+  .tags li:hover { color: var(--accent); border-color: var(--accent); }
+
+  .side { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; align-items: center; }
+  .preview { display: block; text-decoration: none; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--bg); transition: transform .35s, border-color .3s, box-shadow .35s; }
+  .preview:hover { border-color: var(--rose); transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 22px 40px -26px var(--rose); }
+  .chrome { display: flex; align-items: center; gap: 0.35rem; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--line); color: var(--muted); text-transform: none; letter-spacing: 0; }
+  .chrome i { flex: none; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--line); }
+  .chrome span { margin-left: 0.6rem; overflow-wrap: anywhere; }
+  .shot { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; padding: 2.25rem 1.5rem; background: var(--rose-bg); }
+  .shot-kicker { color: var(--rose); }
+  .shot-head { color: var(--ink); font: 600 clamp(1.6rem, 4vw, 2.2rem)/1.1 var(--font-display); }
+  .shot-head em { color: var(--rose); font-style: italic; }
+  .shot-btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .shot-btns span { padding: 0.4rem 0.8rem; border: 1px solid var(--rose); border-radius: 999px; color: var(--rose); font: 500 0.78rem/1.2 var(--font-body); }
+  .shot-btns span:first-child { background: var(--rose); color: var(--bg); }
+  .side-copy .btn { margin-top: 1.25rem; }
+
+  /* Photo container for real evidence */
+  .photo-frame { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); padding: 0.5rem; }
+  .photo-frame figcaption { margin-top: 0.5rem; color: var(--muted); font-size: 0.75rem; text-align: center; font-family: var(--font-mono); }
+
+  .kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+  .kpis li { padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+  .kpis strong { display: block; color: var(--accent); font: 650 1.45rem/1.1 var(--font-display); letter-spacing: -.01em; }
+  .kpis span { display: block; margin-top: .25rem; color: var(--muted); font-size: .76rem; line-height: 1.3; }
+  .case .below { margin-top: 1.5rem; }
+  @media (max-width: 560px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
+
+  /* About and skills (8 groups in 4-column grid) */
+  .about-copy { max-width: 62ch; }
+  .group-title { margin: 2.5rem 0 1rem; color: var(--accent); }
+  .skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; margin: 0; }
+  .skills h3 { margin-bottom: 0.6rem; font: 500 0.75rem/1.3 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .skills ul { margin: 0; padding: 0; list-style: none; }
+  .skills li { padding: 0.35rem 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; transition: padding-left .25s, border-color .25s, color .25s; }
+  .skills li:hover { padding-left: .5rem; border-color: var(--accent); color: var(--accent); }
+
+  /* Resume */
+  .resume-group + .resume-group { margin-top: 2.5rem; }
+  .resume-group > .mono { margin: 0 0 0.25rem; color: var(--accent); }
+  .entry { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 0.5rem 2rem; padding: 1.5rem 0 1.5rem 1.25rem; border-top: 1px solid var(--line); position: relative; }
+  .entry::before { content: ""; position: absolute; left: 0; top: 1.6rem; width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .entry .when { margin: 0.3rem 0 0; color: var(--muted); }
+  .entry > div { min-width: 0; }
+  .entry h3 { font-size: 1.3rem; }
+  .entry .grade { margin: 0.4rem 0 0; color: var(--accent); font-weight: 500; }
+
+  /* Contact */
+  .contact-box { padding: 2rem; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(160deg, var(--surface), var(--surface-2)); }
+  .contact-box .rows { margin-top: 1.75rem; }
+  footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* Print Stylesheet for Automatic PDF Generation */
+  @media print {
+    #progress, .bar, .contours, .rows-bg, .fm, .actions, #toggle-contacts { display: none !important; }
+    :root { --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff; --ink: #111111; --muted: #444444; --line: #cccccc; --accent: #1f5a00; --accent-ink: #ffffff; }
+    body { background: #ffffff !important; color: #111111 !important; font-size: 12pt; line-height: 1.5; }
+    .wrap { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .contacts { display: block !important; border: 1px solid #ccc !important; background: #f9f9f9 !important; color: #111 !important; page-break-inside: avoid; }
+    .contacts code { color: #111 !important; }
+    .case, .contact-box, .photo-frame { border: 1px solid #ccc !important; background: #ffffff !important; color: #111111 !important; page-break-inside: avoid; margin-bottom: 1rem; }
+    .pill { border: 1px solid #666 !important; color: #333 !important; }
+    .tags li { border: 1px solid #999 !important; color: #222 !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+    .hero h1 .surname { color: #1f5a00 !important; background: none !important; -webkit-background-clip: initial !important; }
+    .stats div { border-left-color: #ccc !important; }
+    a { text-decoration: none !important; color: #1f5a00 !important; }
+    .btn { display: none !important; }
+  }
+
+  /* Motion (only for people who have not asked for less) */
+  @media (prefers-reduced-motion: no-preference) {
+    .badge .dot { animation: beat 2.4s ease-out infinite; }
+    @keyframes beat { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 70%, transparent); } 70%, 100% { box-shadow: 0 0 0 .55rem transparent; } }
+    .contours path { animation: drift 24s linear infinite; }
+    .contours path:nth-child(even) { animation-duration: 34s; animation-direction: reverse; }
+    @keyframes drift { to { stroke-dashoffset: -240; } }
+    .rows-bg { animation: rows 40s linear infinite; }
+    @keyframes rows { to { background-position-x: 280px; } }
+    .fm-grid::after { animation: scan 5.5s ease-in-out infinite; }
+    @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(920%); } }
+    .hero h1 span { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+    .hero h1 span:nth-child(2) { animation-delay: .1s; }
+    .hero h1 span:nth-child(3) { animation-delay: .2s; }
+    .tagline { animation: rise .8s cubic-bezier(.2,.7,.2,1) .35s both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(28px); } }
+    .flow li { animation: stage 6s ease-in-out infinite; }
+    .flow li:nth-child(2) { animation-delay: 1.5s; }
+    .flow li:nth-child(3) { animation-delay: 3s; }
+    .flow li:nth-child(4) { animation-delay: 4.5s; }
+    @keyframes stage { 0%, 22% { border-top-color: var(--accent); box-shadow: 0 10px 24px -14px var(--accent); transform: translateY(-3px); } 30%, 100% { border-top-color: var(--line); box-shadow: none; transform: none; } }
+    .loop { animation: pulse 3.2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+    .loop::after { animation: back 4s ease-in-out infinite; }
+    @keyframes back { 0% { right: 8%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { right: 90%; opacity: 0; } }
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
+    .js .reveal.in { opacity: 1; transform: none; }
+    .js .sec-head.reveal .mono::before { transform: scaleX(0); transition: transform .8s ease .25s; }
+    .js .sec-head.reveal.in .mono::before { transform: scaleX(1); }
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; }
+    .services { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .flow li:nth-child(2)::after { display: none; }
+    .loop { display: none; }
+    .loop-label { padding-left: 0.9rem; border-left: 2px dashed var(--accent); }
+    .side { grid-template-columns: minmax(0, 1fr); }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats div:nth-child(3) { border-left: 0; padding-left: 0; }
+    .stats div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 720px) {
+    .hero { padding-block: 2rem 2.25rem; }
+    .band { padding-block: 2.5rem; }
+    .case { padding: 1.1rem; }
+    .contact-box { padding: 1.25rem; }
+    .entry { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; padding: 1.25rem 0 1.25rem 1.25rem; }
+    .entry .when { margin: 0; }
+  }
+  @media (max-width: 560px) {
+    .services { grid-template-columns: minmax(0, 1fr); }
+    .skills { grid-template-columns: minmax(0, 1fr); }
+    .flow { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+    .flow li:not(:last-child)::after { content: "\2193"; right: auto; left: 50%; top: auto; bottom: -1.3rem; transform: translateX(-50%); }
+    .flow li:nth-child(2)::after { display: block; }
+    .rows { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
+    .rows dd { margin-bottom: 0.8rem; }
+    .bar nav { gap: .25rem .9rem; }
+  }
+</style>
+</head>
+<body id="top">
+<div id="progress" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="bar">
+    <span class="mono brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12c0-4 2.5-6.5 7-6.5 0 4.5-2.5 6.5-7 6.5Z"/><path d="M12 15c0-3-2-5-6-5 0 3.5 2 5 6 5Z"/></svg>
+      Engr. Zeeshan Ayaz
+    </span>
+    <nav class="mono" aria-label="Sections">
+      <a href="#services">Portfolio</a>
+      <a href="#work">Projects</a>
+      <a href="#about">About</a>
+      <a href="#resume">Resume</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Introduction">
+      <svg class="contours" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 120 C200 60 380 190 600 130 S1000 40 1200 110"/>
+        <path d="M0 190 C220 130 400 260 620 200 S1000 120 1200 180"/>
+        <path d="M0 260 C240 200 420 330 640 270 S1010 200 1200 250"/>
+        <path d="M0 330 C260 270 440 400 660 340 S1020 280 1200 320"/>
+        <path d="M0 400 C280 340 460 470 680 410 S1030 360 1200 390"/>
+      </svg>
+      <div class="rows-bg" aria-hidden="true"></div>
+
+      <div class="hero-grid">
+        <div>
+          <p class="badge mono"><span class="dot" aria-hidden="true"></span>Available for work</p>
+          <h1><span class="title-pre">Engineer</span><span>Zeeshan</span><span class="surname">Ayaz</span></h1>
+          <p class="tagline">Engineering the shift from conventional farming to precision, sustainable agriculture with UAV computer vision and smart irrigation.</p>
+          <p class="lede">Agricultural engineer specializing in Precision Agriculture, UAV computer vision systems, and HEIS design.</p>
+          <p class="status mono">BSc Agricultural Engineering &middot; UAF &middot; 2026<br>Registered engineer &middot; PEC Reg: AGRICULTURAL / 007526</p>
+          <div class="actions">
+            <a class="btn primary" href="#work">See the work</a>
+            <!-- Automatically generates PDF from live page content when clicked -->
+            <button class="btn ghost" id="download-cv-btn" type="button">Download CV (PDF)</button>
+            <button class="btn ghost" id="toggle-contacts" type="button" aria-expanded="false" aria-controls="contacts">Show contacts</button>
+          </div>
+          <div class="contacts" id="contacts">
+            <dl class="rows">
+              <dt class="mono">Email</dt>
+              <dd>
+                <code>zeeshanbaig828@gmail.com</code>
+                <button class="copy" type="button" data-copy="zeeshanbaig828@gmail.com">Copy</button>
+                <span class="copy-status mono" role="status" aria-live="polite"></span>
+              </dd>
+              <dt class="mono">Phone</dt>
+              <dd><a href="tel:03038565657"><code>0303-8565657</code></a></dd>
+              <dt class="mono">WhatsApp</dt>
+              <dd><a href="https://wa.me/923038565657" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">Chat on WhatsApp &nearr;</a></dd>
+              <dt class="mono">LinkedIn</dt>
+              <dd><a href="https://www.linkedin.com/in/engrzeeshanayaz" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">www.linkedin.com/in/engrzeeshanayaz &nearr;</a></dd>
+              <dt class="mono">Based in</dt>
+              <dd>Faisalabad, Pakistan</dd>
+            </dl>
+          </div>
+        </div>
+
+        <figure class="fm" id="fm" style="margin:0" aria-label="Simulated field moisture map with automatic valve control">
+          <div class="fm-head mono"><span>Field 01 &middot; soil moisture</span><b>Auto mode</b></div>
+          <div class="fm-grid" id="fm-grid" aria-hidden="true"></div>
+          <div class="fm-legend mono" aria-hidden="true"><span>Dry</span><span class="bar2"></span><span>Wet</span></div>
+          <div class="fm-read">
+            <div><small class="mono">Moisture</small><strong id="r-moist">48%</strong></div>
+            <div><small class="mono">Flow</small><strong id="r-flow">0 L/min</strong></div>
+            <div><small class="mono">Valve</small><strong class="valve" id="r-valve">Closed</strong></div>
+          </div>
+          <figcaption class="fm-note mono">Illustrative simulation of sense, decide, act. Not real field data.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="At a glance">
+      <div><strong><span class="num" data-to="3.42" data-dec="2">3.42</span><sub> /4.00</sub></strong><span>CGPA, BSc Agricultural Engineering</span></div>
+      <div><strong><span class="num" data-to="1010" data-dec="0">1010</span><sub> /1100</sub></strong><span>FSc Pre-Engineering marks</span></div>
+      <div><strong><span class="num" data-to="2" data-dec="0">2</span></strong><span>Roles: PCRWR internship and SET UAF</span></div>
+      <div><strong><span class="num" data-to="3" data-dec="0">3</span></strong><span>Languages: English, Urdu, Chinese</span></div>
+    </section>
+
+    <section class="band" id="services" aria-labelledby="h-services">
+      <div class="sec-head">
+        <p class="mono">Portfolio</p>
+        <h2 id="h-services">What I deliver</h2>
+        <p class="slogan">Right water, right place, right time.</p>
+      </div>
+      <ul class="services">
+        <li>
+          <p class="tools mono">AutoCAD</p>
+          <h3>Irrigation system design</h3>
+          <p>Drip and sprinkler networks, from lateral layouts and pipe sizing to pump selection.</p>
+        </li>
+        <li>
+          <p class="tools mono">ArcGIS &middot; Logplot9</p>
+          <h3>GIS and hydrological mapping</h3>
+          <p>Spatial planning, hydrological maps and borehole log analysis for water management projects.</p>
+        </li>
+        <li>
+          <p class="tools mono">Arduino</p>
+          <h3>Water-control automation</h3>
+          <p>Sensors, actuators and motorized valves with feedback loops that adjust flow to demand.</p>
+        </li>
+        <li>
+          <p class="tools mono">UAV &middot; YOLOv8</p>
+          <h3>Precision Agriculture &amp; Computer Vision</h3>
+          <p>Drone field mapping, object detection, and targeted weed/crop analysis using OpenCV and YOLOv8.</p>
+        </li>
+        <li>
+          <p class="tools mono">Data &middot; Reports</p>
+          <h3>Data analysis and reports</h3>
+          <p>Hydrological data analysis, data processing and clear technical report writing.</p>
+        </li>
+        <li>
+          <p class="tools mono">Team &middot; Schedule</p>
+          <h3>Project coordination</h3>
+          <p>Technical events and team work, with timelines, resources and communication kept on track.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="band" id="work" aria-labelledby="h-work">
+      <div class="sec-head">
+        <p class="mono">Projects</p>
+        <h2 id="h-work">Featured projects</h2>
+      </div>
+
+      <article class="case">
+        <ul class="pills" aria-label="Project details">
+          <li class="pill">Final year design project (FYDP-601 &amp; 602)</li>
+          <li class="pill">Arduino &amp; Automation</li>
+        </ul>
+        <h3>Demand-Based Automated Water Distribution System</h3>
+        <p class="meta mono">University of Agriculture, Faisalabad &middot; Final Year Project Track 1</p>
+        <p style="margin-top:1rem">A smart distribution system that regulates water flow from real-time environmental demand, so water reaches the lines when it is needed and is not wasted when it is not.</p>
+
+        <ol class="flow" aria-label="How the system works">
+          <li><b>Sense</b><span>Environmental sensors report real-time demand.</span></li>
+          <li><b>Decide</b><span>An Arduino microcontroller turns each reading into a flow decision.</span></li>
+          <li><b>Act</b><span>Actuators open and close motorized valves to match.</span></li>
+          <li><b>Deliver</b><span>Water reaches the distribution lines with less waste.</span></li>
+        </ol>
+        <div class="loop" aria-hidden="true"></div>
+        <p class="loop-label">Feedback returns the valve response to the controller, which keeps sensor-to-valve timing accurate.</p>
+
+        <ul class="plain">
+          <li>Built a microcontroller system that adjusts flow as conditions change.</li>
+          <li>Integrated automated actuators and motorized valves to trigger the physical components and cut water waste.</li>
+          <li>Developed local control loops and feedback mechanisms for reliable network performance.</li>
+        </ul>
+        <ul class="tags" aria-label="Technologies">
+          <li>Arduino</li>
+          <li>Actuators</li>
+          <li>Motorized valves</li>
+          <li>Feedback control</li>
+        </ul>
+      </article>
+
+      <article class="case">
+        <div class="side">
+          <div>
+            <figure class="photo-frame">
+              <img src="https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQrLJnQ4RmA5py1F7AbPMeynVlVZV-2OnX-pgbnOEByMiy6Jc4qUtWuuUIsGPhbAaJhuWb3O5dWE5a3g-I" alt="UAV drone agricultural field detection YOLOv8" loading="lazy">
+              <figcaption>Figure 4.1: Real UAV field detection output (YOLOv8 crop &amp; weed bounding boxes)</figcaption>
+            </figure>
+          </div>
+          <div class="side-copy">
+            <ul class="pills" aria-label="Project details">
+              <li class="pill">Final year design project (FYDP-601 &amp; 602)</li>
+              <li class="pill">UAV &amp; Computer Vision</li>
+            </ul>
+            <h3>AI-Powered UAV System for Weed Detection</h3>
+            <p class="meta mono">University of Agriculture, Faisalabad &middot; Final Year Project Track 2</p>
+            <p style="margin-top:1rem">A drone with an RTSP-capable camera streams live video of crop fields to a ground station, where a YOLOv8 model detects crops and weeds for precision agriculture. This forms the computer-vision backbone of my final year engineering work.</p>
+            <ul class="kpis" aria-label="Key results">
+              <li><strong>80.65%</strong><span>Average crop detection confidence, cotton and maize</span></li>
+              <li><strong>3.1 FPS</strong><span>Real-time processing speed</span></li>
+              <li><strong>4 crops</strong><span>In the dataset: wheat, rice, cotton, maize</span></li>
+            </ul>
+          </div>
+        </div>
+        <ul class="plain below">
+          <li>Receives the RTSP video stream with OpenCV, then resizes, normalizes and enhances frames before detection.</li>
+          <li>Trained on drone footage of wheat, rice, cotton and maize, split 70% training, 15% validation and 15% testing, collected in different light, times of day and growth stages.</li>
+          <li>Recognizes irrigated areas such as water channels, moist soil and irrigation furrows, giving a field-wide view in place of point readings.</li>
+          <li>Includes a Flask web dashboard for live video, detection results and reports.</li>
+          <li>Field-tested on cotton and maize. Weed detection averaged 83.7% confidence in cotton and 29.3% in maize, where grass-type weeds resemble the crop. Wheat and rice are in the training data but were out of season, so they were not validated.</li>
+        </ul>
+        <ul class="tags" aria-label="Technologies">
+          <li>UAV drone</li>
+          <li>RTSP camera</li>
+          <li>YOLOv8</li>
+          <li>OpenCV</li>
+          <li>Python</li>
+          <li>Flask</li>
+        </ul>
+      </article>
+
+      <article class="case">
+        <div class="side">
+          <div class="side-copy" style="grid-column: 1 / -1;">
+            <ul class="pills" aria-label="Project details">
+              <li class="pill">Hardware project</li>
+              <li class="pill">Arduino</li>
+              <li class="pill">Sensing</li>
+            </ul>
+            <h3>Arduino-Based Soil Moisture Sensor Meter</h3>
+            <p class="meta mono">Precision irrigation sensing</p>
+            <p style="margin-top:1rem">A compact meter built on an Arduino that reads soil moisture and turns the sensor signal into a value you can act on, so irrigation can follow what the soil actually holds instead of guesswork.</p>
+            <ul class="tags" aria-label="Technologies">
+              <li>Arduino</li>
+              <li>Soil moisture sensor</li>
+              <li>Signal reading</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="side">
+          <a class="preview" href="https://arttbyn.vercel.app/" target="_blank" rel="noopener" aria-label="Open the Artt by Noor website in a new tab">
+            <span class="chrome mono" aria-hidden="true"><i></i><i></i><i></i><span>arttbyn.vercel.app</span></span>
+            <span class="shot" aria-hidden="true">
+              <span class="shot-kicker mono">Handmade with heart</span>
+              <span class="shot-head">Where the <em>Art</em> meets the soul</span>
+              <span class="shot-btns"><span>Explore the gallery</span><span>Book mehndi</span></span>
+            </span>
+          </a>
+          <div class="side-copy">
+            <ul class="pills" aria-label="Project details">
+              <li class="pill">Side project</li>
+              <li class="pill live">Live</li>
+            </ul>
+            <h3>Artt by Noor</h3>
+            <p class="meta mono">Website design</p>
+            <p style="margin-top:1rem">I designed this website from scratch for a small handmade art studio in Faisalabad. The studio makes crochet pieces, original paintings, crafted gifts and mehndi designs.</p>
+            <p>Visitors can browse the gallery, read reviews and the studio's story, see its certifications, and book mehndi appointments. The layout works on a phone.</p>
+            <ul class="tags" aria-label="Highlights">
+              <li>Web design</li>
+              <li>Responsive layout</li>
+              <li>Booking page</li>
+              <li>Hosted on Vercel</li>
+            </ul>
+            <a class="btn primary" href="https://arttbyn.vercel.app/" target="_blank" rel="noopener">Visit the site</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="band" id="about" aria-labelledby="h-about">
+      <div class="sec-head">
+        <p class="mono">About</p>
+        <h2 id="h-about">Precision Agriculture, computer vision and smart irrigation in one engineer</h2>
+      </div>
+      <div class="about-copy">
+        <p>I specialize in <strong>Precision Agriculture</strong>, leveraging <strong>UAV drone technology, computer vision (YOLOv8, OpenCV)</strong>, and pressurized irrigation systems (drip and sprinkler design, pipe sizing, and pump selection). I work in AutoCAD, ArcGIS, and Python to bridge agronomy with modern automation.</p>
+        <p>My Final Year Design Project (FYDP-601 &amp; 602) bridges field robotics with electronics through an AI-powered UAV weed detection system and an Arduino-controlled water distribution network. I am looking for roles where precision agriculture, UAV computer vision, and hardware systems meet.</p>
+      </div>
+
+      <p class="mono group-title">What I work with</p>
+      <div class="skills">
+        <div>
+          <h3>Design &amp; simulation</h3>
+          <ul><li>AutoCAD</li><li>Autodesk Simulation</li></ul>
+        </div>
+        <div>
+          <h3>Irrigation &amp; hydraulics</h3>
+          <ul><li>Drip system design</li><li>Sprinkler system design</li><li>Lateral layouts and sizing</li><li>Pump selection</li></ul>
+        </div>
+        <div>
+          <h3>Data &amp; analysis</h3>
+          <ul><li>ArcGIS</li><li>Logplot9</li><li>Hydrological data analysis</li></ul>
+        </div>
+        <div>
+          <h3>Hardware &amp; control</h3>
+          <ul><li>Arduino</li><li>Soil moisture sensing</li><li>Sensor-to-valve control loops</li><li>Motorized valves and actuators</li></ul>
+        </div>
+        <div>
+          <h3>Drones &amp; vision</h3>
+          <ul><li>UAV field data collection</li><li>Python and OpenCV</li><li>YOLOv8 object detection</li><li>Flask monitoring dashboard</li></ul>
+        </div>
+        <div>
+          <h3>Farm machinery &amp; power</h3>
+          <ul><li>Machinery selection &amp; field capacity</li><li>Tractor power and performance</li><li>Engines &amp; power transmission</li><li>Tillage, seeding &amp; harvesting</li></ul>
+        </div>
+        <div>
+          <h3>Documentation</h3>
+          <ul><li>Technical report writing</li><li>Data processing</li></ul>
+        </div>
+        <div>
+          <h3>Coordination</h3>
+          <ul><li>Event organization</li><li>Team management</li><li>Resource scheduling</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="resume" aria-labelledby="h-resume">
+      <div class="sec-head">
+        <p class="mono">Resume</p>
+        <h2 id="h-resume">Experience and credentials</h2>
+      </div>
+
+      <div class="resume-group">
+        <p class="mono">Experience</p>
+        <article class="entry">
+          <p class="when mono">Internship &middot; Islamabad</p>
+          <div>
+            <h3>Pakistan Council of Research in Water Resources (PCRWR)</h3>
+            <ul class="plain">
+              <li>Carried out GIS-based spatial planning and hydrological mapping for water management projects, keeping the data accurate.</li>
+              <li>Analyzed lithological borehole logs in Logplot9 to support decisions in the technical department.</li>
+              <li>Managed data collection and processing workflows in the Water Management Department.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="entry">
+          <p class="when mono">Sep 2024 &ndash; Jun 2025</p>
+          <div>
+            <h3>Society of Engineers and Technologists, UAF</h3>
+            <p class="meta mono">Event Organizer</p>
+            <ul class="plain">
+              <li>Coordinated large technical events, managing timelines, resources and team communication.</li>
+              <li>Worked between faculty and students so projects ran smoothly and stayed aligned with the department.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+
+      <div class="resume-group" id="education">
+        <p class="mono">Credentials</p>
+        <article class="entry">
+          <p class="when mono">2026</p>
+          <div>
+            <h3>BSc Agricultural Engineering (FYDP-601 &amp; 602)</h3>
+            <p class="meta mono">University of Agriculture, Faisalabad (UAF)</p>
+            <p class="grade mono">CGPA 3.42 / 4.00</p>
+          </div>
+        </article>
+        <article class="entry">
+          <p class="when mono">2019 &ndash; 2021</p>
+          <div>
+            <h3>FSc Pre-Engineering</h3>
+            <p class="meta mono">Punjab Group of Colleges, Faisalabad</p>
+            <p class="grade mono">Marks obtained 1010 / 1100</p>
+          </div>
+        </article>
+        <article class="entry">
+          <p class="when mono">Registered engineer</p>
+          <div>
+            <h3>Pakistan Engineering Council (PEC)</h3>
+            <p class="meta mono">Reg: AGRICULTURAL / 007526</p>
+          </div>
+        </article>
+        <article class="entry">
+          <p class="when mono">Languages</p>
+          <div>
+            <h3>English &middot; Urdu &middot; Chinese</h3>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="band" id="contact" aria-labelledby="h-contact">
+      <div class="contact-box">
+        <div class="sec-head" style="margin-bottom:0">
+          <p class="mono">Contact</p>
+          <h2 id="h-contact">Let's work together</h2>
+        </div>
+        <p class="slogan" style="margin-top:1.1rem">Right water, right place, right time.</p>
+        <p style="margin-top:.8rem">Open to work in precision agriculture, UAV computer vision, irrigation design, and water-control automation.</p>
+        <div class="actions">
+          <a class="btn primary" href="mailto:zeeshanbaig828@gmail.com">Send message</a>
+          <a class="btn ghost" href="https://wa.me/923038565657" target="_blank" rel="noopener">Chat on WhatsApp</a>
+        </div>
+        <dl class="rows">
+          <dt class="mono">Email</dt>
+          <dd>
+            <code>zeeshanbaig828@gmail.com</code>
+            <button class="copy" type="button" data-copy="zeeshanbaig828@gmail.com">Copy</button>
+            <span class="copy-status mono" role="status" aria-live="polite"></span>
+          </dd>
+          <dt class="mono">Phone</dt>
+          <dd><a href="tel:03038565657"><code>0303-8565657</code></a></dd>
+          <dt class="mono">WhatsApp</dt>
+          <dd><a href="https://wa.me/923038565657" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">0303-8565657 &nearr;</a></dd>
+          <dt class="mono">LinkedIn</dt>
+          <dd><a href="https://www.linkedin.com/in/engrzeeshanayaz" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">www.linkedin.com/in/engrzeeshanayaz &nearr;</a></dd>
+          <dt class="mono">Based in</dt>
+          <dd>Faisalabad, Pakistan</dd>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mono">
+    <span>&copy; 2026 Engineer Zeeshan Ayaz</span>
+    <a href="#top">Back to top &uarr;</a>
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add("js");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* Contacts drawer toggle fix */
+    var toggle = document.getElementById("toggle-contacts");
+    var panel = document.getElementById("contacts");
+    toggle.addEventListener("click", function () {
+      var opening = !panel.classList.contains("show");
+      panel.classList.toggle("show", opening);
+      toggle.setAttribute("aria-expanded", opening ? "true" : "false");
+      toggle.textContent = opening ? "Hide contacts" : "Show contacts";
+    });
+
+    /* Automatic PDF Generation from Live Content */
+    var downloadBtn = document.getElementById("download-cv-btn");
+    downloadBtn.addEventListener("click", function () {
+      window.print();
+    });
+
+    /* Copy email */
+    function say(status, text) {
+      if (!status) return;
+      status.textContent = text;
+      setTimeout(function () { status.textContent = ""; }, 2500);
+    }
+    function selectText(node) {
+      if (!node) return;
+      var range = document.createRange();
+      range.selectNodeContents(node);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-copy]");
+      if (!btn) return;
+      var row = btn.parentNode;
+      var status = row.querySelector(".copy-status");
+      var text = btn.getAttribute("data-copy");
+      function fallback() { selectText(row.querySelector("code")); say(status, "Press copy to finish"); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { say(status, "Copied"); }, fallback);
+      } else { fallback(); }
+    });
+
+    /* Scroll progress bar, one transform per frame */
+    var bar = document.getElementById("progress");
+    var ticking = false;
+    function paint() {
+      var h = root.scrollHeight - window.innerHeight;
+      bar.style.transform = "scaleX(" + (h > 0 ? Math.min(1, window.scrollY / h) : 0) + ")";
+      ticking = false;
+    }
+    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }, { passive: true });
+    paint();
+
+    /* Scroll reveal, stats count-up, active nav link */
+    var hasIO = "IntersectionObserver" in window;
+    if (hasIO && !reduce) {
+      var targets = document.querySelectorAll(".sec-head, .services li, .case, .skills > div, .entry, .contact-box, .stats > div, .about-copy");
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+      targets.forEach(function (el) {
+        var sibs = el.parentNode.children, i = Array.prototype.indexOf.call(sibs, el);
+        el.style.setProperty("--d", (Math.min(i, 6) * 0.07) + "s");
+        el.classList.add("reveal");
+        io.observe(el);
+      });
+
+      var nums = document.querySelectorAll(".num");
+      var io2 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          io2.unobserve(en.target);
+          var el = en.target, to = parseFloat(el.getAttribute("data-to")), dec = parseInt(el.getAttribute("data-dec"), 10), t0 = null;
+          function step(t) {
+            if (t0 === null) t0 = t;
+            var p = Math.min(1, (t - t0) / 1200), eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = (to * eased).toFixed(dec);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.6 });
+      nums.forEach(function (n) { io2.observe(n); });
+    }
+    if (hasIO) {
+      var links = document.querySelectorAll('.bar nav a[href^="#"]');
+      var map = {};
+      links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+      var io3 = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting && map[en.target.id]) {
+            links.forEach(function (a) { a.removeAttribute("aria-current"); });
+            map[en.target.id].setAttribute("aria-current", "true");
+          }
+        });
+      }, { rootMargin: "-40% 0px -55% 0px" });
+      Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io3.observe(s); });
+    }
+
+    /* Field map: a tiny sense -> decide -> act loop, like the final year project */
+    var grid = document.getElementById("fm-grid");
+    var fm = document.getElementById("fm");
+    var COLS = 12, ROWS = 7, cells = [], vals = [], open = false;
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var el = document.createElement("i");
+        grid.appendChild(el);
+        cells.push(el);
+        var v = 46 + 22 * Math.sin(c * 0.7) * Math.cos(r * 0.9) + (Math.random() * 10 - 5);
+        vals.push(Math.max(12, Math.min(92, v)));
+      }
+    }
+    var rM = document.getElementById("r-moist"), rF = document.getElementById("r-flow"), rV = document.getElementById("r-valve");
+    function render() {
+      var sum = 0;
+      for (var i = 0; i < cells.length; i++) { cells[i].style.setProperty("--m", vals[i].toFixed(1)); sum += vals[i]; }
+      var avg = sum / vals.length;
+      rM.textContent = Math.round(avg) + "%";
+      rF.textContent = open ? (11.5 + Math.random() * 2).toFixed(1) + " L/min" : "0 L/min";
+      rV.textContent = open ? "Open" : "Closed";
+      fm.classList.toggle("open", open);
+      return avg;
+    }
+    function tick() {
+      if (document.hidden) return;
+      for (var i = 0; i < vals.length; i++) {
+        var n = Math.random() * 3 - 1.5;
+        vals[i] = Math.max(8, Math.min(95, vals[i] + (open ? 3.2 : -1.8) + n));
+      }
+      var avg = render();
+      if (!open && avg < 42) { open = true; }
+      else if (open && avg > 64) { open = false; }
+    }
+    render();
+    if (!reduce) setInterval(tick, 1600);
+  })();
+</script>
+</body>
+</html>
+"""
+
+with open("portfolio.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
+
+print("Updated portfolio.html successfully!")
