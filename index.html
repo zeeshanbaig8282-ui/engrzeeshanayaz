@@ -378,7 +378,7 @@
           <p class="status mono">BSc Agricultural Engineering &middot; UAF &middot; 2026<br>Registered engineer &middot; PEC Reg: AGRICULTURAL / 007526</p>
           <div class="actions">
             <a class="btn primary" href="#work">See the work</a>
-            <button class="btn ghost" id="download-cv-btn" type="button">Download CV (PDF)</button>
+            <a class="btn ghost" id="download-cv-btn" href="Zeeshan_Ayaz_CV.pdf" download="Zeeshan_Ayaz_CV.pdf">Download CV (PDF)</a>
             <button class="btn ghost" id="toggle-contacts" type="button" aria-expanded="false" aria-controls="contacts">Show contacts</button>
           </div>
           <div class="contacts" id="contacts">
@@ -850,12 +850,6 @@
       panel.classList.toggle("show", opening);
       toggle.setAttribute("aria-expanded", opening ? "true" : "false");
       toggle.textContent = opening ? "Hide contacts" : "Show contacts";
-    });
-
-    /* Automatic PDF Generation */
-    var downloadBtn = document.getElementById("download-cv-btn");
-    downloadBtn.addEventListener("click", function () {
-      window.print();
     });
 
     /* Copy email */
