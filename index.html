@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Engineer Zeeshan Ayaz | Agricultural Engineer</title>
-<meta name="description" content="Zeeshan Ayaz, agricultural engineer (PEC registered) working on irrigation design, GIS mapping and demand-based water-control automation.">
+<title>Engineer Zeeshan Ayaz | Agricultural Engineer &amp; Precision Ag Specialist</title>
+<meta name="description" content="Zeeshan Ayaz, agricultural engineer (PEC registered) working on precision agriculture, UAV computer vision, irrigation design, and water-control automation.">
 <meta name="theme-color" content="#0a130e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,7 @@
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--font-body); transition: background .4s, color .4s; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   a { color: inherit; }
-  img { max-width: 100%; }
+  img { max-width: 100%; height: auto; display: block; border-radius: 6px; }
   [hidden] { display: none !important; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 
@@ -94,7 +94,8 @@
   .status { margin: 1.25rem 0 0; color: var(--muted); }
   .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
 
-  .contacts { margin-top: 1.25rem; max-width: 34rem; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .contacts { margin-top: 1.25rem; max-width: 34rem; padding: 1.1rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); display: none; }
+  .contacts.show { display: block !important; }
   .rows { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 0.8rem 1rem; align-items: center; margin: 0; }
   .rows dt { color: var(--muted); }
   .rows dd { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; min-width: 0; }
@@ -187,53 +188,18 @@
   .shot-btns span:first-child { background: var(--rose); color: var(--bg); }
   .side-copy .btn { margin-top: 1.25rem; }
 
-  /* Soil moisture meter visual */
-  .meter { padding: 1.4rem 1.25rem 1.1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
-  .meter-head { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; color: var(--muted); }
-  .meter-head b { color: var(--accent); font-weight: 500; }
-  .meter-track { position: relative; height: 14px; border-radius: 999px; background: linear-gradient(90deg, var(--soil), color-mix(in oklab, var(--soil) 45%, var(--water)) 45%, var(--water)); }
-  .meter-track::before { content: ""; position: absolute; left: 35%; width: 30%; top: -5px; bottom: -5px; border: 1px dashed var(--accent); border-radius: 6px; }
-  .needle { position: absolute; left: 48%; top: -12px; width: 2px; height: 38px; background: var(--ink); border-radius: 1px; }
-  .needle::before { content: ""; position: absolute; left: -5px; top: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
-  .meter-scale { display: flex; justify-content: space-between; margin-top: 1.5rem; color: var(--muted); font-size: .68rem; }
-  .meter-pins { display: flex; gap: .5rem; margin-top: 1.1rem; }
-  .meter-pins i { flex: 1; height: 26px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 4px 4px; background: repeating-linear-gradient(90deg, transparent 0 6px, var(--line) 6px 7px); }
-  @media (prefers-reduced-motion: no-preference) {
-    .needle { animation: sweep 7s ease-in-out infinite; }
-    @keyframes sweep { 0%, 100% { left: 20%; } 30% { left: 64%; } 55% { left: 42%; } 80% { left: 72%; } }
-  }
+  /* Photo container for real evidence */
+  .photo-frame { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); padding: 0.5rem; }
+  .photo-frame figcaption { margin-top: 0.5rem; color: var(--muted); font-size: 0.75rem; text-align: center; font-family: var(--font-mono); }
 
-  /* UAV detection visual and result figures */
-  .detect { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, var(--bg)), var(--bg)); }
-  .detect::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(80deg, transparent 0 22px, color-mix(in srgb, var(--accent) 20%, transparent) 22px 25px); }
-  .det-hud { position: absolute; left: .8rem; right: .8rem; top: .7rem; display: flex; justify-content: space-between; color: var(--muted); font-size: .66rem; }
-  .det-hud span:first-child::before { content: ""; display: inline-block; width: .5rem; height: .5rem; margin-right: .4rem; border-radius: 50%; background: var(--rose); }
-  .det-scan { position: absolute; top: 0; bottom: 0; left: 0; width: 14%; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--water) 35%, transparent)); border-right: 1px solid var(--water); transform: translateX(-100%); }
-  .box { position: absolute; color: var(--accent); border: 2px solid currentColor; border-radius: 3px; background: radial-gradient(ellipse at 50% 62%, color-mix(in srgb, currentColor 38%, transparent), transparent 72%); }
-  .box.weed { color: var(--rose); }
-  .box em { position: absolute; left: -2px; top: -1.5rem; padding: .1rem .4rem; border-radius: 2px; background: currentColor; font: 500 .62rem/1.3 var(--font-mono); font-style: normal; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
-  .box em b { color: var(--accent-ink); font-weight: 500; }
-  .box.weed em b { color: var(--bg); }
-  .b1 { left: 10%; top: 40%; width: 27%; height: 34%; }
-  .b2 { left: 54%; top: 31%; width: 25%; height: 38%; }
-  .b3 { left: 42%; top: 64%; width: 15%; height: 19%; }
-  .b4 { left: 74%; top: 72%; width: 16%; height: 18%; }
-  .det-cap { position: absolute; left: .8rem; bottom: .6rem; margin: 0; color: var(--muted); font-size: .62rem; }
   .kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
   .kpis li { padding: .7rem .8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
   .kpis strong { display: block; color: var(--accent); font: 650 1.45rem/1.1 var(--font-display); letter-spacing: -.01em; }
   .kpis span { display: block; margin-top: .25rem; color: var(--muted); font-size: .76rem; line-height: 1.3; }
   .case .below { margin-top: 1.5rem; }
-  @media (prefers-reduced-motion: no-preference) {
-    .det-scan { animation: dscan 6s ease-in-out infinite; }
-    @keyframes dscan { 0% { transform: translateX(-100%); } 100% { transform: translateX(780%); } }
-    .box { animation: pop 8s ease-in-out infinite; }
-    .b2 { animation-delay: .8s; } .b3 { animation-delay: 1.6s; } .b4 { animation-delay: 2.4s; }
-    @keyframes pop { 0%, 6% { opacity: 0; transform: scale(.92); } 14%, 84% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; transform: scale(.98); } }
-  }
   @media (max-width: 560px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
 
-  /* About and skills */
+  /* About and skills (8 groups in 4-column grid) */
   .about-copy { max-width: 62ch; }
   .group-title { margin: 2.5rem 0 1rem; color: var(--accent); }
   .skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; margin: 0; }
@@ -255,7 +221,27 @@
   /* Contact */
   .contact-box { padding: 2rem; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(160deg, var(--surface), var(--surface-2)); }
   .contact-box .rows { margin-top: 1.75rem; }
-  footer { padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); }
+  footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* Print Stylesheet for Automatic PDF Generation */
+  @media print {
+    #progress, .bar, .contours, .rows-bg, .fm, .actions, #toggle-contacts { display: none !important; }
+    :root { --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff; --ink: #111111; --muted: #444444; --line: #cccccc; --accent: #1f5a00; --accent-ink: #ffffff; }
+    body { background: #ffffff !important; color: #111111 !important; font-size: 12pt; line-height: 1.5; }
+    .wrap { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .contacts { display: block !important; border: 1px solid #ccc !important; background: #f9f9f9 !important; color: #111 !important; page-break-inside: avoid; }
+    .contacts code { color: #111 !important; }
+    .case, .contact-box, .photo-frame { border: 1px solid #ccc !important; background: #ffffff !important; color: #111111 !important; page-break-inside: avoid; margin-bottom: 1rem; }
+    .pill { border: 1px solid #666 !important; color: #333 !important; }
+    .tags li { border: 1px solid #999 !important; color: #222 !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+    .hero h1 .surname { color: #1f5a00 !important; background: none !important; -webkit-background-clip: initial !important; }
+    .stats div { border-left-color: #ccc !important; }
+    a { text-decoration: none !important; color: #1f5a00 !important; }
+    .btn { display: none !important; }
+  }
 
   /* Motion (only for people who have not asked for less) */
   @media (prefers-reduced-motion: no-preference) {
@@ -319,15 +305,9 @@
     .rows dd { margin-bottom: 0.8rem; }
     .bar nav { gap: .25rem .9rem; }
   }
-  @media print {
-    #progress, .bar, .contours, .rows-bg, .fm, .actions { display: none !important; }
-    :root { --bg: #fff; --surface: #fff; --ink: #000; --muted: #333; --line: #bbb; --accent: #1f5a00; }
-    .reveal { opacity: 1 !important; transform: none !important; }
-    .hero h1 .surname { color: #1f5a00; background: none; }
-  }
 </style>
 </head>
-<body>
+<body id="top">
 <div id="progress" aria-hidden="true"></div>
 
 <div class="wrap">
@@ -341,7 +321,8 @@
       <a href="#work">Projects</a>
       <a href="#about">About</a>
       <a href="#resume">Resume</a>
-      <a href="#contact">Contact</a>    </nav>
+      <a href="#contact">Contact</a>
+    </nav>
   </header>
 
   <main>
@@ -359,14 +340,16 @@
         <div>
           <p class="badge mono"><span class="dot" aria-hidden="true"></span>Available for work</p>
           <h1><span class="title-pre">Engineer</span><span>Zeeshan</span><span class="surname">Ayaz</span></h1>
-          <p class="tagline">Engineering the shift from conventional farming to precision, sustainable agriculture.</p>
-          <p class="lede">Agricultural engineer working on HEIS design and Precision Agriculture. </p>
+          <p class="tagline">Engineering the shift from conventional farming to precision, sustainable agriculture with UAV computer vision and smart irrigation.</p>
+          <p class="lede">Agricultural engineer specializing in Precision Agriculture, UAV computer vision systems, and HEIS design.</p>
           <p class="status mono">BSc Agricultural Engineering &middot; UAF &middot; 2026<br>Registered engineer &middot; PEC Reg: AGRICULTURAL / 007526</p>
           <div class="actions">
             <a class="btn primary" href="#work">See the work</a>
+            <!-- Automatically generates PDF from live page content when clicked -->
+            <button class="btn ghost" id="download-cv-btn" type="button">Download CV (PDF)</button>
             <button class="btn ghost" id="toggle-contacts" type="button" aria-expanded="false" aria-controls="contacts">Show contacts</button>
           </div>
-          <div class="contacts" id="contacts" hidden>
+          <div class="contacts" id="contacts">
             <dl class="rows">
               <dt class="mono">Email</dt>
               <dd>
@@ -375,7 +358,11 @@
                 <span class="copy-status mono" role="status" aria-live="polite"></span>
               </dd>
               <dt class="mono">Phone</dt>
-              <dd><code>0303-8565657</code></dd>
+              <dd><a href="tel:03038565657"><code>0303-8565657</code></a></dd>
+              <dt class="mono">WhatsApp</dt>
+              <dd><a href="https://wa.me/923038565657" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">Chat on WhatsApp &nearr;</a></dd>
+              <dt class="mono">LinkedIn</dt>
+              <dd><a href="https://www.linkedin.com/in/engrzeeshanayaz" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">www.linkedin.com/in/engrzeeshanayaz &nearr;</a></dd>
               <dt class="mono">Based in</dt>
               <dd>Faisalabad, Pakistan</dd>
             </dl>
@@ -426,9 +413,9 @@
           <p>Sensors, actuators and motorized valves with feedback loops that adjust flow to demand.</p>
         </li>
         <li>
-          <p class="tools mono">Field operations</p>
-          <h3>Farm machinery and power</h3>
-          <p>Machinery selection, field capacity, and tractor power and performance.</p>
+          <p class="tools mono">UAV &middot; YOLOv8</p>
+          <h3>Precision Agriculture &amp; Computer Vision</h3>
+          <p>Drone field mapping, object detection, and targeted weed/crop analysis using OpenCV and YOLOv8.</p>
         </li>
         <li>
           <p class="tools mono">Data &middot; Reports</p>
@@ -451,12 +438,11 @@
 
       <article class="case">
         <ul class="pills" aria-label="Project details">
-          <li class="pill">Final year design project</li>
-          <li class="pill">Arduino</li>
-          <li class="pill">Automation</li>
+          <li class="pill">Final year design project (FYDP-601 &amp; 602)</li>
+          <li class="pill">Arduino &amp; Automation</li>
         </ul>
         <h3>Demand-Based Automated Water Distribution System</h3>
-        <p class="meta mono">University of Agriculture, Faisalabad</p>
+        <p class="meta mono">University of Agriculture, Faisalabad &middot; Final Year Project Track 1</p>
         <p style="margin-top:1rem">A smart distribution system that regulates water flow from real-time environmental demand, so water reaches the lines when it is needed and is not wasted when it is not.</p>
 
         <ol class="flow" aria-label="How the system works">
@@ -483,24 +469,20 @@
 
       <article class="case">
         <div class="side">
-          <div class="detect" aria-hidden="true">
-            <div class="det-hud mono"><span>Drone &middot; RTSP live</span><span>3.1 FPS</span></div>
-            <span class="det-scan"></span>
-            <div class="box b1"><em>Cotton <b>92%</b></em></div>
-            <div class="box b2"><em>Cotton <b>95%</b></em></div>
-            <div class="box weed b3"><em>Weed <b>88%</b></em></div>
-            <div class="box weed b4"><em>Weed <b>75%</b></em></div>
-            <p class="det-cap mono">Illustration of the detection view</p>
+          <div>
+            <figure class="photo-frame">
+              <img src="https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQrLJnQ4RmA5py1F7AbPMeynVlVZV-2OnX-pgbnOEByMiy6Jc4qUtWuuUIsGPhbAaJhuWb3O5dWE5a3g-I" alt="UAV drone agricultural field detection YOLOv8" loading="lazy">
+              <figcaption>Figure 4.1: Real UAV field detection output (YOLOv8 crop &amp; weed bounding boxes)</figcaption>
+            </figure>
           </div>
           <div class="side-copy">
             <ul class="pills" aria-label="Project details">
-              <li class="pill">University project</li>
-              <li class="pill">UAV</li>
-              <li class="pill">Computer vision</li>
+              <li class="pill">Final year design project (FYDP-601 &amp; 602)</li>
+              <li class="pill">UAV &amp; Computer Vision</li>
             </ul>
             <h3>AI-Powered UAV System for Weed Detection</h3>
-            <p class="meta mono">University of Agriculture, Faisalabad &middot; FYDP-601 &amp; 602</p>
-            <p style="margin-top:1rem">A drone with an RTSP-capable camera streams live video of crop fields to a ground station, where a YOLOv8 model detects crops and weeds and the footage shows irrigated areas. The aim is precision agriculture: targeted weed control and better irrigation decisions in place of walking every field.</p>
+            <p class="meta mono">University of Agriculture, Faisalabad &middot; Final Year Project Track 2</p>
+            <p style="margin-top:1rem">A drone with an RTSP-capable camera streams live video of crop fields to a ground station, where a YOLOv8 model detects crops and weeds for precision agriculture. This forms the computer-vision backbone of my final year engineering work.</p>
             <ul class="kpis" aria-label="Key results">
               <li><strong>80.65%</strong><span>Average crop detection confidence, cotton and maize</span></li>
               <li><strong>3.1 FPS</strong><span>Real-time processing speed</span></li>
@@ -527,13 +509,7 @@
 
       <article class="case">
         <div class="side">
-          <div class="meter" aria-hidden="true">
-            <div class="meter-head mono"><span>Soil moisture meter</span><b>Illustration</b></div>
-            <div class="meter-track"><span class="needle"></span></div>
-            <div class="meter-scale mono"><span>Dry</span><span>Optimal</span><span>Wet</span></div>
-            <div class="meter-pins"><i></i><i></i></div>
-          </div>
-          <div class="side-copy">
+          <div class="side-copy" style="grid-column: 1 / -1;">
             <ul class="pills" aria-label="Project details">
               <li class="pill">Hardware project</li>
               <li class="pill">Arduino</li>
@@ -580,16 +556,16 @@
           </div>
         </div>
       </article>
-        </section>
+    </section>
 
     <section class="band" id="about" aria-labelledby="h-about">
       <div class="sec-head">
         <p class="mono">About</p>
-        <h2 id="h-about">Design, data and hardware in one engineer</h2>
+        <h2 id="h-about">Precision Agriculture, computer vision and smart irrigation in one engineer</h2>
       </div>
       <div class="about-copy">
-        <p>I design pressurized irrigation systems, both drip and sprinkler, from lateral layouts and pipe sizing to pump selection. I work in AutoCAD and ArcGIS, and I process and analyze hydrological data.</p>
-        <p>My final year project connects that hydraulic work to electronics: an Arduino-controlled water distribution system that adjusts its valves to match demand. I am looking for roles where design, data and hardware meet, in teams that value organized and well-documented engineering.</p>
+        <p>I specialize in <strong>Precision Agriculture</strong>, leveraging <strong>UAV drone technology, computer vision (YOLOv8, OpenCV)</strong>, and pressurized irrigation systems (drip and sprinkler design, pipe sizing, and pump selection). I work in AutoCAD, ArcGIS, and Python to bridge agronomy with modern automation.</p>
+        <p>My Final Year Design Project (FYDP-601 &amp; 602) bridges field robotics with electronics through an AI-powered UAV weed detection system and an Arduino-controlled water distribution network. I am looking for roles where precision agriculture, UAV computer vision, and hardware systems meet.</p>
       </div>
 
       <p class="mono group-title">What I work with</p>
@@ -615,12 +591,8 @@
           <ul><li>UAV field data collection</li><li>Python and OpenCV</li><li>YOLOv8 object detection</li><li>Flask monitoring dashboard</li></ul>
         </div>
         <div>
-          <h3>Farm machinery</h3>
-          <ul><li>Machinery selection and field capacity</li><li>Tillage and seeding equipment</li><li>Harvesting equipment</li><li>Tractor operation and maintenance</li></ul>
-        </div>
-        <div>
-          <h3>Farm power</h3>
-          <ul><li>Tractor power and performance</li><li>Engines and power transmission</li><li>Power requirement estimation</li></ul>
+          <h3>Farm machinery &amp; power</h3>
+          <ul><li>Machinery selection &amp; field capacity</li><li>Tractor power and performance</li><li>Engines &amp; power transmission</li><li>Tillage, seeding &amp; harvesting</li></ul>
         </div>
         <div>
           <h3>Documentation</h3>
@@ -670,7 +642,7 @@
         <article class="entry">
           <p class="when mono">2026</p>
           <div>
-            <h3>BSc Agricultural Engineering</h3>
+            <h3>BSc Agricultural Engineering (FYDP-601 &amp; 602)</h3>
             <p class="meta mono">University of Agriculture, Faisalabad (UAF)</p>
             <p class="grade mono">CGPA 3.42 / 4.00</p>
           </div>
@@ -706,9 +678,10 @@
           <h2 id="h-contact">Let's work together</h2>
         </div>
         <p class="slogan" style="margin-top:1.1rem">Right water, right place, right time.</p>
-        <p style="margin-top:.8rem">Open to work in irrigation design, GIS and water-control automation.</p>
+        <p style="margin-top:.8rem">Open to work in precision agriculture, UAV computer vision, irrigation design, and water-control automation.</p>
         <div class="actions">
           <a class="btn primary" href="mailto:zeeshanbaig828@gmail.com">Send message</a>
+          <a class="btn ghost" href="https://wa.me/923038565657" target="_blank" rel="noopener">Chat on WhatsApp</a>
         </div>
         <dl class="rows">
           <dt class="mono">Email</dt>
@@ -718,7 +691,11 @@
             <span class="copy-status mono" role="status" aria-live="polite"></span>
           </dd>
           <dt class="mono">Phone</dt>
-          <dd><code>0303-8565657</code></dd>
+          <dd><a href="tel:03038565657"><code>0303-8565657</code></a></dd>
+          <dt class="mono">WhatsApp</dt>
+          <dd><a href="https://wa.me/923038565657" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">0303-8565657 &nearr;</a></dd>
+          <dt class="mono">LinkedIn</dt>
+          <dd><a href="https://www.linkedin.com/in/engrzeeshanayaz" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:none;">www.linkedin.com/in/engrzeeshanayaz &nearr;</a></dd>
           <dt class="mono">Based in</dt>
           <dd>Faisalabad, Pakistan</dd>
         </dl>
@@ -726,7 +703,10 @@
     </section>
   </main>
 
-  <footer class="mono">&copy; 2026 Engineer Zeeshan Ayaz</footer>
+  <footer class="mono">
+    <span>&copy; 2026 Engineer Zeeshan Ayaz</span>
+    <a href="#top">Back to top &uarr;</a>
+  </footer>
 </div>
 
 <script>
@@ -735,14 +715,20 @@
     root.classList.add("js");
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* Contacts drawer */
+    /* Contacts drawer toggle fix */
     var toggle = document.getElementById("toggle-contacts");
     var panel = document.getElementById("contacts");
     toggle.addEventListener("click", function () {
-      var opening = panel.hidden;
-      panel.hidden = !opening;
+      var opening = !panel.classList.contains("show");
+      panel.classList.toggle("show", opening);
       toggle.setAttribute("aria-expanded", opening ? "true" : "false");
       toggle.textContent = opening ? "Hide contacts" : "Show contacts";
+    });
+
+    /* Automatic PDF Generation from Live Content */
+    var downloadBtn = document.getElementById("download-cv-btn");
+    downloadBtn.addEventListener("click", function () {
+      window.print();
     });
 
     /* Copy email */
@@ -870,3 +856,9 @@
 </script>
 </body>
 </html>
+"""
+
+with open("portfolio.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
+
+print("Updated portfolio.html successfully!")
