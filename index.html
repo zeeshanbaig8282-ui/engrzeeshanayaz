@@ -82,6 +82,10 @@
     -webkit-mask-image: linear-gradient(to top, #000, transparent); mask-image: linear-gradient(to top, #000, transparent); }
   .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 3rem; align-items: center; }
 
+  .portrait { display: block; width: clamp(9rem, 24vw, 13rem); aspect-ratio: 1; margin: 0 0 1.5rem; padding: 0; overflow: hidden; border-radius: 50%; border: 3px solid var(--accent); background: linear-gradient(160deg, #f3f6f1, #d9e4d6); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 14%, transparent), 0 24px 48px -24px #000; }
+  /* Zoom in on the face so it fills the frame, and add a touch of clarity */
+  .portrait img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; transform: scale(1.32); transform-origin: 50% 44%; filter: contrast(1.06) saturate(1.05) brightness(1.02); image-rendering: auto; }
+
   .badge { display: inline-flex; align-items: center; gap: 0.6rem; margin: 0 0 1.75rem; padding: 0.35rem 0.8rem; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
   .badge .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 var(--ok); }
   .hero h1 { margin: 0; font: 700 clamp(3.1rem, 9vw, 6.4rem)/0.92 var(--font-display); letter-spacing: -0.03em; font-variation-settings: "opsz" 96; }
@@ -104,10 +108,26 @@
   .copy:hover { border-color: var(--accent); }
   .copy-status { color: var(--muted); }
 
-  /* Simulated field map */
-  .fm { padding: 1rem 1.1rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 30px 60px -40px #000; }
-  .fm-head { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); }
+  /* Simulated field map & HEIS Animation Card Container */
+  .fm { position: relative; padding: 1rem 1.1rem 1.1rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 30px 60px -40px #000; }
+  .fm-head { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); padding-right: 2.2rem; }
   .fm-head b { color: var(--accent); font-weight: 500; }
+  
+  /* Next/Toggle Arrow Button mid-right */
+  .anim-toggle-btn {
+    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); z-index: 20;
+    width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--accent);
+    background: var(--surface-2); color: var(--accent); font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .anim-toggle-btn:hover { background: var(--accent); color: var(--accent-ink); transform: translateY(-50%) scale(1.08); }
+
+  /* Slide views */
+  .anim-slide { display: none; }
+  .anim-slide.active { display: block; }
+
+  /* Moisture Animation Styling */
   .fm-grid { position: relative; overflow: hidden; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 3px; margin: 0.9rem 0; border-radius: 4px; }
   .fm-grid i { aspect-ratio: 1; border-radius: 2px; background: color-mix(in oklab, var(--water) calc(var(--m, 50) * 1%), var(--soil)); transition: background .9s ease; }
   .fm-grid::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 12%; pointer-events: none; transform: translateX(-100%);
@@ -122,6 +142,16 @@
   .fm.open .valve { color: var(--water); }
   .fm.open .valve::before { background: var(--water); box-shadow: 0 0 10px var(--water); }
   .fm-note { margin: .8rem 0 0; color: var(--muted); font-size: .66rem; }
+
+  /* HEIS Design Animation Sketch Styling */
+  .heis-sketch { margin: 0.9rem 0; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.75rem; }
+  .heis-svg { width: 100%; height: auto; display: block; }
+  .heis-pulse { animation: heisWaterPulse 2s ease-in-out infinite; }
+  .heis-flow { stroke-dasharray: 6 6; animation: heisFlowDash 1.2s linear infinite; }
+  .heis-drip { animation: heisDripDrop 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  @keyframes heisFlowDash { to { stroke-dashoffset: -12; } }
+  @keyframes heisWaterPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+  @keyframes heisDripDrop { 0% { r: 1px; opacity: 0; } 40% { opacity: 1; } 100% { r: 5px; opacity: 0; } }
 
   /* Stats strip */
   .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
@@ -165,7 +195,7 @@
   .flow li { position: relative; padding: 0.9rem 1rem 1rem; border: 1px solid var(--line); border-top: 3px solid var(--line); border-radius: 4px; background: var(--bg); }
   .flow li b { display: block; margin-bottom: 0.35rem; color: var(--accent); font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .flow li span { display: block; font-size: 0.92rem; line-height: 1.45; }
-  .flow li:not(:last-child)::after { content: "\2192"; position: absolute; right: -1.25rem; top: 50%; transform: translateY(-50%); width: 1rem; text-align: center; color: var(--accent); font-size: 1.1rem; }
+  .flow li:not(:last-child)::after { content: "\2193"; position: absolute; right: -1.25rem; top: 50%; transform: translateY(-50%); width: 1rem; text-align: center; color: var(--accent); font-size: 1.1rem; }
   .loop { position: relative; margin: 0.5rem 0 0; border: 1.5px dashed var(--accent); border-top: none; border-radius: 0 0 8px 8px; height: 1.1rem; }
   .loop::after { content: ""; position: absolute; bottom: -5px; right: 10%; width: 9px; height: 9px; border-radius: 50%; background: var(--water); box-shadow: 0 0 10px var(--water); }
   .loop-label { margin: 0.7rem 0 0; color: var(--muted); font-size: 0.88rem; max-width: none; }
@@ -199,7 +229,7 @@
   .case .below { margin-top: 1.5rem; }
   @media (max-width: 560px) { .kpis { grid-template-columns: minmax(0, 1fr); } }
 
-  /* About and skills (8 groups in 4-column grid) */
+  /* About and skills */
   .about-copy { max-width: 62ch; }
   .group-title { margin: 2.5rem 0 1rem; color: var(--accent); }
   .skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; margin: 0; }
@@ -225,9 +255,9 @@
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
-  /* Print Stylesheet for Automatic PDF Generation */
+  /* Print Stylesheet */
   @media print {
-    #progress, .bar, .contours, .rows-bg, .fm, .actions, #toggle-contacts { display: none !important; }
+    #progress, .bar, .contours, .rows-bg, .fm, .actions, #toggle-contacts, .anim-toggle-btn { display: none !important; }
     :root { --bg: #ffffff; --surface: #ffffff; --surface-2: #ffffff; --ink: #111111; --muted: #444444; --line: #cccccc; --accent: #1f5a00; --accent-ink: #ffffff; }
     body { background: #ffffff !important; color: #111111 !important; font-size: 12pt; line-height: 1.5; }
     .wrap { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -243,7 +273,7 @@
     .btn { display: none !important; }
   }
 
-  /* Motion (only for people who have not asked for less) */
+  /* Motion */
   @media (prefers-reduced-motion: no-preference) {
     .badge .dot { animation: beat 2.4s ease-out infinite; }
     @keyframes beat { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 70%, transparent); } 70%, 100% { box-shadow: 0 0 0 .55rem transparent; } }
@@ -338,6 +368,9 @@
 
       <div class="hero-grid">
         <div>
+          <figure class="portrait" style="margin:0 0 1.5rem">
+            <img src="zeeshan.jpg" alt="Portrait of Engineer Zeeshan Ayaz" width="400" height="400" onerror="this.closest('.portrait').hidden=true">
+          </figure>
           <p class="badge mono"><span class="dot" aria-hidden="true"></span>Available for work</p>
           <h1><span class="title-pre">Engineer</span><span>Zeeshan</span><span class="surname">Ayaz</span></h1>
           <p class="tagline">Engineering the shift from conventional farming towards precision agriculture.</p>
@@ -345,7 +378,6 @@
           <p class="status mono">BSc Agricultural Engineering &middot; UAF &middot; 2026<br>Registered engineer &middot; PEC Reg: AGRICULTURAL / 007526</p>
           <div class="actions">
             <a class="btn primary" href="#work">See the work</a>
-            <!-- Automatically generates PDF from live page content when clicked -->
             <button class="btn ghost" id="download-cv-btn" type="button">Download CV (PDF)</button>
             <button class="btn ghost" id="toggle-contacts" type="button" aria-expanded="false" aria-controls="contacts">Show contacts</button>
           </div>
@@ -369,16 +401,113 @@
           </div>
         </div>
 
-        <figure class="fm" id="fm" style="margin:0" aria-label="Simulated field moisture map with automatic valve control">
-          <div class="fm-head mono"><span>Field 01 &middot; soil moisture</span><b>Auto mode</b></div>
-          <div class="fm-grid" id="fm-grid" aria-hidden="true"></div>
-          <div class="fm-legend mono" aria-hidden="true"><span>Dry</span><span class="bar2"></span><span>Wet</span></div>
-          <div class="fm-read">
-            <div><small class="mono">Moisture</small><strong id="r-moist">48%</strong></div>
-            <div><small class="mono">Flow</small><strong id="r-flow">0 L/min</strong></div>
-            <div><small class="mono">Valve</small><strong class="valve" id="r-valve">Closed</strong></div>
+        <figure class="fm" id="fm" style="margin:0" aria-label="Simulated field moisture map and HEIS design animations">
+          <!-- Toggle Button Positioned Mid-Right -->
+          <button class="anim-toggle-btn" id="anim-toggle" type="button" title="Switch Animation" aria-label="Switch Animation">&gt;</button>
+
+          <!-- Slide 1: Soil Moisture Auto Mode -->
+          <div class="anim-slide active" id="slide-moisture">
+            <div class="fm-head mono"><span>Field 01 &middot; soil moisture</span><b>Auto mode</b></div>
+            <div class="fm-grid" id="fm-grid" aria-hidden="true"></div>
+            <div class="fm-legend mono" aria-hidden="true"><span>Dry</span><span class="bar2"></span><span>Wet</span></div>
+            <div class="fm-read">
+              <div><small class="mono">Moisture</small><strong id="r-moist">48%</strong></div>
+              <div><small class="mono">Flow</small><strong id="r-flow">0 L/min</strong></div>
+              <div><small class="mono">Valve</small><strong class="valve" id="r-valve">Closed</strong></div>
+            </div>
+            <figcaption class="fm-note mono">Illustrative simulation of sense, decide, act. Not real field data.</figcaption>
           </div>
-          <figcaption class="fm-note mono">Illustrative simulation of sense, decide, act. Not real field data.</figcaption>
+
+          <!-- Slide 2: HEIS Design Animated Sketch -->
+          <div class="anim-slide" id="slide-heis">
+            <div class="fm-head mono"><span>HEIS Design &middot; Drip Network Layout</span><b>Active Drip</b></div>
+            <div class="heis-sketch">
+              <svg class="heis-svg" viewBox="0 0 320 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Pump Station / Filtration Unit -->
+                <rect x="10" y="65" width="30" height="40" rx="3" fill="#16261c" stroke="#8fd14f" stroke-width="1.5"/>
+                <text x="25" y="88" fill="#8fd14f" font-size="8" font-family="monospace" text-anchor="middle">PUMP</text>
+                
+                <!-- Mainline Pipe -->
+                <path d="M40 85 H80" stroke="#4fc3e8" stroke-width="3"/>
+                <path d="M40 85 H80" stroke="#ffffff" stroke-width="2" class="heis-flow"/>
+                
+                <!-- Submain Pipe -->
+                <path d="M80 25 V145" stroke="#4fc3e8" stroke-width="2.5"/>
+                <path d="M80 25 V145" stroke="#ffffff" stroke-width="1.5" class="heis-flow"/>
+                
+                <!-- Lateral Drip Lines -->
+                <g stroke="#8fd14f" stroke-width="1.2">
+                  <path d="M80 35 H290" />
+                  <path d="M80 70 H290" />
+                  <path d="M80 105 H290" />
+                  <path d="M80 140 H290" />
+                </g>
+                
+                <!-- Animated Water Flows in Laterals -->
+                <g stroke="#4fc3e8" stroke-width="1" class="heis-flow">
+                  <path d="M80 35 H290" />
+                  <path d="M80 70 H290" />
+                  <path d="M80 105 H290" />
+                  <path d="M80 140 H290" />
+                </g>
+
+                <!-- Emitter Drip Nodes & Active Water Pulsing -->
+                <!-- Row 1 -->
+                <circle cx="130" cy="35" r="3" fill="#b98a55"/>
+                <circle cx="130" cy="35" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="200" cy="35" r="3" fill="#b98a55"/>
+                <circle cx="200" cy="35" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="270" cy="35" r="3" fill="#b98a55"/>
+                <circle cx="270" cy="35" r="2" fill="#4fc3e8" class="heis-drip"/>
+
+                <!-- Row 2 -->
+                <circle cx="130" cy="70" r="3" fill="#b98a55"/>
+                <circle cx="130" cy="70" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="200" cy="70" r="3" fill="#b98a55"/>
+                <circle cx="200" cy="70" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="270" cy="70" r="3" fill="#b98a55"/>
+                <circle cx="270" cy="70" r="2" fill="#4fc3e8" class="heis-drip"/>
+
+                <!-- Row 3 -->
+                <circle cx="130" cy="105" r="3" fill="#b98a55"/>
+                <circle cx="130" cy="105" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="200" cy="105" r="3" fill="#b98a55"/>
+                <circle cx="200" cy="105" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="270" cy="105" r="3" fill="#b98a55"/>
+                <circle cx="270" cy="105" r="2" fill="#4fc3e8" class="heis-drip"/>
+
+                <!-- Row 4 -->
+                <circle cx="130" cy="140" r="3" fill="#b98a55"/>
+                <circle cx="130" cy="140" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="200" cy="140" r="3" fill="#b98a55"/>
+                <circle cx="200" cy="140" r="2" fill="#4fc3e8" class="heis-drip"/>
+                <circle cx="270" cy="140" r="3" fill="#b98a55"/>
+                <circle cx="270" cy="140" r="2" fill="#4fc3e8" class="heis-drip"/>
+
+                <!-- Wet Zone Radii (Soil moisture expansion) -->
+                <g fill="#4fc3e8" class="heis-pulse">
+                  <circle cx="130" cy="35" r="8"/>
+                  <circle cx="200" cy="35" r="8"/>
+                  <circle cx="270" cy="35" r="8"/>
+                  <circle cx="130" cy="70" r="8"/>
+                  <circle cx="200" cy="70" r="8"/>
+                  <circle cx="270" cy="70" r="8"/>
+                  <circle cx="130" cy="105" r="8"/>
+                  <circle cx="200" cy="105" r="8"/>
+                  <circle cx="270" cy="105" r="8"/>
+                  <circle cx="130" cy="140" r="8"/>
+                  <circle cx="200" cy="140" r="8"/>
+                  <circle cx="270" cy="140" r="8"/>
+                </g>
+              </svg>
+            </div>
+            <div class="fm-read">
+              <div><small class="mono">System</small><strong style="color:var(--accent);">High Efficiency</strong></div>
+              <div><small class="mono">Pressure</small><strong>1.8 bar</strong></div>
+              <div><small class="mono">Uniformity</small><strong style="color:var(--water);">92% DU</strong></div>
+            </div>
+            <figcaption class="fm-note mono">Schematic of hydraulic mainlines, sub-mains &amp; emitters.</figcaption>
+          </div>
         </figure>
       </div>
     </section>
@@ -386,7 +515,7 @@
     <section class="stats" aria-label="At a glance" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
       <div><strong><span class="num" data-to="3.42" data-dec="2">3.42</span><sub> /4.00</sub></strong><span>CGPA, BSc Agricultural Engineering</span></div>
       <div><strong><span class="num" data-to="2" data-dec="0">2</span></strong><span>Roles: PCRWR internship and SET UAF</span></div>
-      <div><strong><span class="num" data-to="3" data-dec="0">3</span></strong><span>Languages: English, Urdu, Chinese</span></div>
+      <div><strong><span class="num" data-to="3" data-dec="0">3</span></strong><span>Languages: English, Urdu, Chinese (HSK 1) </span></div>
     </section>
 
     <section class="band" id="services" aria-labelledby="h-services">
@@ -663,7 +792,7 @@
         <article class="entry">
           <p class="when mono">Languages</p>
           <div>
-            <h3>English &middot; Urdu &middot; Chinese</h3>
+            <h3>English &middot; Urdu &middot; Chinese (HSK 1)</h3>
           </div>
         </article>
       </div>
@@ -723,7 +852,7 @@
       toggle.textContent = opening ? "Hide contacts" : "Show contacts";
     });
 
-    /* Automatic PDF Generation from Live Content */
+    /* Automatic PDF Generation */
     var downloadBtn = document.getElementById("download-cv-btn");
     downloadBtn.addEventListener("click", function () {
       window.print();
@@ -755,7 +884,7 @@
       } else { fallback(); }
     });
 
-    /* Scroll progress bar, one transform per frame */
+    /* Scroll progress bar */
     var bar = document.getElementById("progress");
     var ticking = false;
     function paint() {
@@ -814,7 +943,22 @@
       Object.keys(map).forEach(function (id) { var s = document.getElementById(id); if (s) io3.observe(s); });
     }
 
-    /* Field map: a tiny sense -> decide -> act loop, like the final year project */
+    /* Animation Switcher Toggle Logic */
+    var animToggleBtn = document.getElementById("anim-toggle");
+    var slideMoisture = document.getElementById("slide-moisture");
+    var slideHeis = document.getElementById("slide-heis");
+
+    animToggleBtn.addEventListener("click", function () {
+      if (slideMoisture.classList.contains("active")) {
+        slideMoisture.classList.remove("active");
+        slideHeis.classList.add("active");
+      } else {
+        slideHeis.classList.remove("active");
+        slideMoisture.classList.add("active");
+      }
+    });
+
+    /* Field map: a sense -> decide -> act loop */
     var grid = document.getElementById("fm-grid");
     var fm = document.getElementById("fm");
     var COLS = 12, ROWS = 7, cells = [], vals = [], open = false;
